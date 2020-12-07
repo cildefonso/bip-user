@@ -1,0 +1,58 @@
+version: '3.1'
+
+services:
+  bip-user-mongodb:
+    image: mongo:latest
+    container_name: "bip-user-mongodb"
+    ports:
+     - 27017:27017
+   # environment:
+   #   MONGO_INITDB_ROOT_USERNAME: root
+   #   MONGO_INITDB_ROOT_PASSWORD:
+    networks:
+     - bit-user
+  bip-user-springboot:
+    image: bip-user-springboot
+    container_name: "bip-user-springboot"
+    build: 
+     context: ./
+     dockerfile: Dockerfile   
+    ports:
+     - 8081:8080
+    links:
+     - bip-user-mongodb
+    networks:
+     - bit-user
+    depends_on:
+       - bip-user-mongodb
+     
+networks:
+  bit-user:
+  
+  
+  
+ 
+#version: 3.2
+#jobs:
+#  build:
+#    docker:
+#      - image: circleci/python:3.6.2-stretch-browers
+#  environment:
+#    TEST_DATABASE_URL: postgresql://root@localhost/circle_test
+#      - image: circleci/postgres:9.6.5-alpine-ram
+#   steps:
+#      - checkout
+#      - run: sudo apt install postgresql-client-9.6
+#      - run: whoami
+#      - run: |
+#          psql \
+#          -d $TEST_DATABASE_URL \
+#          -c "CREATE TABLE test (name char(25));"
+#      - run: |
+#          psql \
+#          -d $TEST_DATABASE_URL \
+#          -c "INSERT INTO test (name) VALUES ('fern')"
+#      - run: |
+#          psql \
+#          -d $TEST_DATABASE_URL \
+#          -c "SELECT * from test"
